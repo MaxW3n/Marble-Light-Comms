@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
 
+image = 'white.jpg'
+
 def get_avg_brightness(image):
     brightness = []
     # Scan through rows and columns
@@ -18,17 +20,47 @@ def color_detector(image):
    b_avg = get_avg_brightness(b)
    g_avg = get_avg_brightness(g)
    r_avg = get_avg_brightness(r)
-
-   if b_avg > g_avg and b_avg > r_avg:
-       print("Blue")
+   if b_avg > 200 and g_avg > 200 and r_avg > 200:
+       return "W"
+   elif b_avg > g_avg and b_avg > r_avg:
+       return "B"
    elif g_avg > b_avg and g_avg > r_avg:
-       print("Green")
+       return "G"
+   elif r_avg > b_avg and r_avg > g_avg:
+       return "R"
    else:
-       print("Red")
+       return "W"
 
-color_detector("blue0517-4dfc85cb0200460ab717b101ac07888f.jpg")
-color_detector("Solid_red.svg.png")
-color_detector("Flag_of_Libya_(1977–2011).svg.png")
+
+color = []
+while True:
+    color.append(color_detector(image))
+
+    cv2.imshow("Image", cv2.imread(image))
+    key = cv2.waitKey(100)
+
+    # Change the image color
+    if key == ord("b"):
+        image = "blue.jpg"
+    elif key == ord("g"):
+        image = "green.png"
+    elif key == ord("r"):
+        image = "red.png"
+    elif key == ord("w"):
+        image = "white.jpg"
+
+    if key == ord("q"):
+        break
+print(color)
+color_list = []
+
+# If 2 consecutive colors are the same, remove the second one
+for item in color:
+    if not color_list or color_list[-1] != item:
+        color_list.append(item)
+
+if color_list == ['W', 'R', 'W', 'G', 'W', 'B', 'W']:
+    print("RGB")
 
 
 
